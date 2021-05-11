@@ -718,8 +718,8 @@ let rec block_element_list :
         let block = Loc.map (accepted_in_all_contexts context) block in
         let acc = block :: acc in
         consume_block_elements ~parsed_a_tag `After_text acc
-    | { value = (`Code_block s | `Verbatim s) as token; location } as next_token
-      ->
+    | { value = (`Code_block (_, s) | `Verbatim s) as token; location } as
+      next_token ->
         warn_if_after_tags next_token;
         warn_if_after_text next_token;
         if s = "" then
