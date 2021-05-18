@@ -133,7 +133,7 @@ let trim_leading_whitespace : first_line_offset:int -> string -> string =
 type input = {
   file : string;
   offset_to_location : int -> Location.point;
-  warnings : Warning.warning_accumulator;
+  warnings : Warning.t list ref;
   lexbuf : Lexing.lexbuf;
 }
 
@@ -173,7 +173,7 @@ let emit =
 
 let warning =
   with_location_adjustments (fun input location error ->
-    Warning.warning input.warnings (error location))
+    input.warnings := (error location) :: !(input.warnings))
 
 let reference_token start target =
   match start with

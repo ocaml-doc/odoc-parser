@@ -18,7 +18,8 @@ let should_begin_on_its_own_line : what:string -> Location.span -> Warning.t =
  fun ~what ->
   Warning.make "%s should begin on its own line." (capitalize_ascii what)
 
-let should_be_followed_by_whitespace : what:string -> Location.span -> Warning.t =
+let should_be_followed_by_whitespace : what:string -> Location.span -> Warning.t
+    =
  fun ~what ->
   Warning.make "%s should be followed by space, a tab, or a new line."
     (capitalize_ascii what)

@@ -1,7 +1,7 @@
 type input = {
   file : string;
   offset_to_location : int -> Location.point;
-  warnings : Warning.warning_accumulator;
+  warnings : Warning.t list ref;
   lexbuf : Lexing.lexbuf;
 }
 
