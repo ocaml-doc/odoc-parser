@@ -1,8 +1,8 @@
 module Ast = Ast
 module Location = Location
 
-module Error : sig
-  type t = Error.t = { location : Location.span; message : string }
+module Warning : sig
+  type t = Warning.t = { location : Location.span; message : string }
 
   val to_string : t -> string
 
@@ -10,4 +10,4 @@ module Error : sig
 end
 
 val parse_comment :
-  location:Lexing.position -> text:string -> Ast.docs Error.with_warnings
+  location:Lexing.position -> text:string -> Ast.docs Warning.with_warnings
