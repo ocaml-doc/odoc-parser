@@ -1,19 +1,21 @@
-# odoc-parser 
+{0 odoc-parser}
 
 Odoc-parser is a parser for odoc markup, which is an extension of the original markup
-language parsed by [ocamldoc](https://ocaml.org/releases/4.12/htmlman/ocamldoc.html).
+language parsed by {{:https://ocaml.org/releases/4.12/htmlman/ocamldoc.html}ocamldoc}.
 
 OCaml code can contain specially formatted comments that are used to document the
-interfaces of modules. These comments are delimited by `(**` and `*)`. This parser
+interfaces of modules. These comments are delimited by [(**] and [*)]. This parser
 is intended to be used to parse the contents of these comments.
 
-The parser is part of the [odoc](https://github.com/ocaml/odoc/) project.
+The parser is part of the {{:https://github.com/ocaml/odoc/}odoc} project.
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details of the development process.
+Please see {{!page-contributing}Contributing} for details of the development process.
 
-## Example usage:
+{{!Odoc_parser}here are the API docs}.
 
-```ocaml
+{1 Example usage}
+
+{[
 # #require "odoc-parser";;
 # let location = {Lexing.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0};;
 val location : Lexing.position =
@@ -51,6 +53,7 @@ val w : Odoc_parser.Warning.t list =
         {Odoc_parser__.Loc.file = "";
          start = {Odoc_parser__.Loc.line = 1; column = 9};
          end_ = {Odoc_parser__.Loc.line = 1; column = 20}};
-       value = `Code_span "unfinished"}]}]
-```
+       value = `Code_span "unfinished"} ] } ]
+]}
+
 
