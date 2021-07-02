@@ -1,6 +1,6 @@
 (lang dune 2.8)
 (name odoc-parser)
-(version 2.0.0)
+(version 0.9.0)
 
 (generate_opam_files true)
 
