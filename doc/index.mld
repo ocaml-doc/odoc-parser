@@ -11,7 +11,7 @@ The parser is part of the {{:https://github.com/ocaml/odoc/}odoc} project.
 
 Please see {{!page-contributing}Contributing} for details of the development process.
 
-{{!Odoc_parser}here are the API docs}.
+{{!Odoc_parser}here are the API docs} for version 0.9.0.
 
 {1 Example usage}
 
