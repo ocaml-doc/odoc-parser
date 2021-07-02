@@ -1,18 +1,85 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
- <head><title>Odoc_parser (Odoc_parser)</title>
-  <link rel="stylesheet" href="odoc.css"/><meta charset="utf-8"/>
-  <meta name="generator" content="odoc %%VERSION%%"/>
+ <head><title>index (index)</title><link rel="stylesheet" href="odoc.css"/>
+  <meta charset="utf-8"/><meta name="generator" content="odoc %%VERSION%%"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <script src="../highlight.pack.js"></script>
+  <script src="highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
  </head>
  <body class="odoc">
   <header class="odoc-preamble">
-   <h1>Odoc-parser</h1>
-   <p>Parser for ocamldoc formatted comments.</p>
+   <h1 id="odoc-parser"><a href="#odoc-parser" class="anchor"></a>odoc-parser
+   </h1>
+   <p>Odoc-parser is a parser for odoc markup, which is an extension 
+    of the original markup language parsed by 
+    <a href="https://ocaml.org/releases/4.12/htmlman/ocamldoc.html">ocamldoc
+    </a>.
+   </p>
+   <p>OCaml code can contain specially formatted comments that are used
+     to document the interfaces of modules. These comments are delimited
+     by <code>(**</code> and <code>*)</code>. This parser is intended
+     to be used to parse the contents of these comments.
+   </p>
+   <p>The parser is part of the 
+    <a href="https://github.com/ocaml/odoc/">odoc</a> project.
+   </p>
+   <p>Please see <a href="contributing.html">Contributing</a> for details
+     of the development process.
+   </p><p><a href="Odoc_parser/index.html">here are the API docs</a>.</p>
   </header>
+  <nav class="odoc-toc">
+   <ul><li><a href="#example-usage">Example usage</a></li></ul>
+  </nav>
   <div class="odoc-content">
+   <h2 id="example-usage"><a href="#example-usage" class="anchor"></a>
+    Example usage
+   </h2>
+   <pre>
+    <code>
+     # #require &quot;odoc-parser&quot;;;
+     # let location = {Lexing.pos_fname = &quot;&quot;; pos_lnum = 1; pos_bol
+     = 0; pos_cnum = 0};;
+     val location : Lexing.position =
+       {Lexing.pos_fname = &quot;&quot;; pos_lnum = 1; pos_bol = 0; pos_cnum
+     = 0}
+     # let p = Odoc_parser.parse_comment ~location ~text:&quot;{b
+     Bold!}[unfinished&quot;;;
+     val p : Odoc_parser.t = &lt;abstr&gt;
+     # let w = Odoc_parser.warnings p;;
+     val w : Odoc_parser.Warning.t list =
+       [{Odoc_parser.Warning.location =
+          {Odoc_parser.Loc.file = &quot;&quot;;
+           start = {Odoc_parser.Loc.line = 1; column = 20};
+           end_ = {Odoc_parser.Loc.line = 1; column = 20}};
+         message = &quot;End of text is not allowed in '[...]'
+     (code).&quot;}]
+     # Odoc_parser.ast p;;
+     - : Odoc_parser.Ast.t =
+     [{Odoc_parser__.Loc.location =
+        {Odoc_parser__.Loc.file = &quot;&quot;;
+         start = {Odoc_parser__.Loc.line = 1; column = 0};
+         end_ = {Odoc_parser__.Loc.line = 1; column = 20}};
+       value =
+        `Paragraph
+          [{Odoc_parser__.Loc.location =
+             {Odoc_parser__.Loc.file = &quot;&quot;;
+              start = {Odoc_parser__.Loc.line = 1; column = 0};
+              end_ = {Odoc_parser__.Loc.line = 1; column = 9}};
+            value =
+             `Styled
+               (`Bold,
+                [{Odoc_parser__.Loc.location =
+                   {Odoc_parser__.Loc.file = &quot;&quot;;
+                    start = {Odoc_parser__.Loc.line = 1; column = 3};
+                    end_ = {Odoc_parser__.Loc.line = 1; column = 8}};
+                  value = `Word &quot;Bold!&quot;}])};
+           {Odoc_parser__.Loc.location =
+             {Odoc_parser__.Loc.file = &quot;&quot;;
+              start = {Odoc_parser__.Loc.line = 1; column = 9};
+              end_ = {Odoc_parser__.Loc.line = 1; column = 20}};
+            value = `Code_span &quot;unfinished&quot;} ] } ]
+    </code>
+   </pre>
   </div>
  </body>
 </html>
