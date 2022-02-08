@@ -20,5 +20,6 @@ understood by ocamldoc.")
   (ocaml (>= 4.02.0))
   astring
   result
+  camlp-streams
   (ppx_expect :with-test)))
 
