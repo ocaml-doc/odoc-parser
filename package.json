@@ -15,6 +15,7 @@
     "@opam/dune": "^2.8.5",
     "@opam/result": "*",
     "@opam/ppx_expect": "*",
+    "@opam/camlp-streams": "*",
     "ocaml": "^4.02.3"
   },
   "license": "ISC",
