@@ -401,6 +401,16 @@ rule token input = parse
   | "@param" horizontal_space+ ((_ # space_char)+ as name)
     { emit input (`Tag (`Param name)) }
 
+  | ("@raise" | "@raises") horizontal_space+ (reference_start as start) ([^ '}']* as target) '}'
+    { if start <> "{!" then
+        warning
+          input
+          ~start_offset:(Lexing.lexeme_end lexbuf)
+          (Parse_error.not_allowed
+            ~what:(Token.describe (reference_token start ""))
+            ~in_what:(Token.describe (`Tag (`Raise (`Plain, "")))));
+      emit input (`Tag (`Raise (`Reference, target))) }
+
   | ("@raise" | "@raises") horizontal_space+ ((_ # space_char)+ as name)
     { emit input (`Tag (`Raise (`Plain, name))) }
 

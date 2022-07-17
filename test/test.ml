@@ -4004,6 +4004,40 @@ let%expect_test _ =
          (warnings
           ( "File \"f.ml\", line 1, characters 0-9:\
            \nUnknown tag '@raisefoo'."))) |}]
+
+    let reference =
+      test "@raise {!Foo}";
+      [%expect
+        {|
+          ((output
+            (((f.ml (1 0) (1 13)) (@raise reference ((f.ml (1 0) (1 13)) Foo)))))
+           (warnings ())) |}]
+
+    let link =
+      test "@raise {:foo}";
+      [%expect
+        {|
+          ((output
+            (((f.ml (1 0) (1 13)) (@raise reference ((f.ml (1 0) (1 13)) foo)))))
+           (warnings
+            ( "File \"f.ml\", line 1, characters 13-13:\
+             \n'{:...} (external link)' is not allowed in '@raise'."))) |}]
+
+    let reference_with_text =
+      test "@raise {{!Foo} bar}";
+      [%expect
+        {|
+          ((output
+            (((f.ml (1 0) (1 18))
+              (@raise reference ((f.ml (1 0) (1 14)) Foo)
+               ((f.ml (1 15) (1 18)) (paragraph (((f.ml (1 15) (1 18)) (word bar)))))))
+             ((f.ml (1 18) (1 19)) (paragraph (((f.ml (1 18) (1 19)) (word })))))))
+           (warnings
+            ( "File \"f.ml\", line 1, characters 14-14:\
+             \n'{{!...} ...}' (cross-reference) is not allowed in '@raise'."
+              "File \"f.ml\", line 1, characters 18-19:\
+             \nUnpaired '}' (end of markup).\
+             \nSuggestion: try '\\}'."))) |}]
   end in
   ()
 
