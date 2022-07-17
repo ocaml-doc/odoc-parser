@@ -56,7 +56,7 @@ type ocamldoc_tag =
   [ `Author of string
   | `Deprecated of nestable_block_element with_location list
   | `Param of string * nestable_block_element with_location list
-  | `Raise of [ `Plain | `Reference ] * string * nestable_block_element with_location list
+  | `Raise of [ `Plain | `Reference ] * string with_location * nestable_block_element with_location list
   | `Return of nestable_block_element with_location list
   | `See of
     [ `Url | `File | `Document ]

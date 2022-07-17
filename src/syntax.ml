@@ -686,7 +686,7 @@ let rec block_element_list :
                 let tag =
                   match tag with
                   | `Param s -> `Param (s, content)
-                  | `Raise (kind, s) -> `Raise (kind, s, content)
+                  | `Raise (kind, s) -> `Raise (kind, Loc.at location s, content) (* TODO: only s location *)
                   | `Before s -> `Before (s, content)
                 in
                 let location =
