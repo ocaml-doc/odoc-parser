@@ -402,7 +402,7 @@ rule token input = parse
     { emit input (`Tag (`Param name)) }
 
   | ("@raise" | "@raises") horizontal_space+ ((_ # space_char)+ as name)
-    { emit input (`Tag (`Raise name)) }
+    { emit input (`Tag (`Raise (`Plain, name))) }
 
   | ("@return" | "@returns")
     { emit input (`Tag `Return) }
@@ -458,7 +458,7 @@ rule token input = parse
 
   | ("@raise" | "@raises") as tag
     { warning input (Parse_error.truncated_raise tag);
-      emit input (`Tag (`Raise "")) }
+      emit input (`Tag (`Raise (`Plain, ""))) }
 
   | "@before"
     { warning input Parse_error.truncated_before;

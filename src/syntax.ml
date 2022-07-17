@@ -487,7 +487,8 @@ let tag_to_words = function
   | `Open -> [ `Word "@open" ]
   | `Closed -> [ `Word "@closed" ]
   | `Param s -> [ `Word "@param"; `Space " "; `Word s ]
-  | `Raise s -> [ `Word "@raise"; `Space " "; `Word s ]
+  | `Raise (`Plain, s) -> [ `Word "@raise"; `Space " "; `Word s ]
+  | `Raise (`Reference, s) -> [ `Word "@raise"; `Space " "; `Word ("{!" ^ s ^ "}") ]
   | `Return -> [ `Word "@return" ]
   | `See (`Document, s) -> [ `Word "@see"; `Space " "; `Word ("\"" ^ s ^ "\"") ]
   | `See (`File, s) -> [ `Word "@see"; `Space " "; `Word ("'" ^ s ^ "'") ]
@@ -685,7 +686,7 @@ let rec block_element_list :
                 let tag =
                   match tag with
                   | `Param s -> `Param (s, content)
-                  | `Raise s -> `Raise (`Plain, s, content)
+                  | `Raise (kind, s) -> `Raise (kind, s, content)
                   | `Before s -> `Before (s, content)
                 in
                 let location =
