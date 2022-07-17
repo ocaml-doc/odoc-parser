@@ -90,9 +90,14 @@ module Ast_to_sexp = struct
         List
           ([ Atom "@param"; Atom s ]
           @ List.map (at.at (nestable_block_element at)) es)
-    | `Raise (s, es) ->
+    | `Raise (kind, s, es) ->
+        let kind =
+          match kind with
+          | `Plain -> "plain"
+          | `Reference -> "reference"
+        in
         List
-          ([ Atom "@raise"; Atom s ]
+          ([ Atom "@raise"; Atom kind; Atom s ]
           @ List.map (at.at (nestable_block_element at)) es)
     | `Return es ->
         List (Atom "@return" :: List.map (at.at (nestable_block_element at)) es)
@@ -3964,13 +3969,13 @@ let%expect_test _ =
     let basic =
       test "@raise Foo";
       [%expect
-        {| ((output (((f.ml (1 0) (1 10)) (@raise Foo)))) (warnings ())) |}]
+        {| ((output (((f.ml (1 0) (1 10)) (@raise plain Foo)))) (warnings ())) |}]
 
     let bare =
       test "@raise";
       [%expect
         {|
-        ((output (((f.ml (1 0) (1 6)) (@raise ""))))
+        ((output (((f.ml (1 0) (1 6)) (@raise plain ""))))
          (warnings
           ( "File \"f.ml\", line 1, characters 0-6:\
            \n'@raise' expects exception constructor on the same line."))) |}]
@@ -3981,7 +3986,7 @@ let%expect_test _ =
         {|
         ((output
           (((f.ml (1 0) (1 18))
-            (@raise foo
+            (@raise plain foo
              ((f.ml (1 11) (1 18))
               (paragraph
                (((f.ml (1 11) (1 14)) (word bar)) ((f.ml (1 14) (1 15)) space)
@@ -5041,7 +5046,7 @@ let%expect_test _ =
     let raise =
       test "@raise \xce\xbb";
       [%expect
-        {| ((output (((f.ml (1 0) (1 9)) (@raise "\206\187")))) (warnings ())) |}]
+        {| ((output (((f.ml (1 0) (1 9)) (@raise plain "\206\187")))) (warnings ())) |}]
 
     let see =
       test "@see <\xce\xbb>";

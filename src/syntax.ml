@@ -685,7 +685,7 @@ let rec block_element_list :
                 let tag =
                   match tag with
                   | `Param s -> `Param (s, content)
-                  | `Raise s -> `Raise (s, content)
+                  | `Raise s -> `Raise (`Plain, s, content)
                   | `Before s -> `Before (s, content)
                 in
                 let location =
