@@ -13,7 +13,7 @@ type tag =
     [ `Author of string
     | `Deprecated
     | `Param of string
-    | `Raise of [ `Plain | `Reference ] * string
+    | `Raise of [ `Word of string | `Simple_reference of string ]
     | `Return
     | `See of [ `Url | `File | `Document ] * string
     | `Since of string

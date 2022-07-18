@@ -90,14 +90,10 @@ module Ast_to_sexp = struct
         List
           ([ Atom "@param"; Atom s ]
           @ List.map (at.at (nestable_block_element at)) es)
-    | `Raise (kind, s, es) ->
-        let kind =
-          match kind with
-          | `Plain -> "plain"
-          | `Reference -> "reference"
-        in
+    | `Raise (kind, es) ->
+        let kind = inline_element at (kind :> Ast.inline_element) in
         List
-          ([ Atom "@raise"; Atom kind; at.at str s ]
+          ([ Atom "@raise"; kind ]
           @ List.map (at.at (nestable_block_element at)) es)
     | `Return es ->
         List (Atom "@return" :: List.map (at.at (nestable_block_element at)) es)
@@ -3970,14 +3966,13 @@ let%expect_test _ =
       test "@raise Foo";
       [%expect
         {|
-          ((output (((f.ml (1 0) (1 10)) (@raise plain ((f.ml (1 0) (1 10)) Foo)))))
-           (warnings ())) |}]
+          ((output (((f.ml (1 0) (1 10)) (@raise (word Foo))))) (warnings ())) |}]
 
     let bare =
       test "@raise";
       [%expect
         {|
-        ((output (((f.ml (1 0) (1 6)) (@raise plain ((f.ml (1 0) (1 6)) "")))))
+        ((output (((f.ml (1 0) (1 6)) (@raise (word "")))))
          (warnings
           ( "File \"f.ml\", line 1, characters 0-6:\
            \n'@raise' expects exception constructor on the same line."))) |}]
@@ -3988,7 +3983,7 @@ let%expect_test _ =
         {|
         ((output
           (((f.ml (1 0) (1 18))
-            (@raise plain ((f.ml (1 0) (1 10)) foo)
+            (@raise (word foo)
              ((f.ml (1 11) (1 18))
               (paragraph
                (((f.ml (1 11) (1 14)) (word bar)) ((f.ml (1 14) (1 15)) space)
@@ -4010,7 +4005,7 @@ let%expect_test _ =
       [%expect
         {|
           ((output
-            (((f.ml (1 0) (1 13)) (@raise reference ((f.ml (1 0) (1 13)) Foo)))))
+            (((f.ml (1 0) (1 13)) (@raise (simple ((f.ml (1 0) (1 13)) Foo) ())))))
            (warnings ())) |}]
 
     let link =
@@ -4018,7 +4013,7 @@ let%expect_test _ =
       [%expect
         {|
           ((output
-            (((f.ml (1 0) (1 13)) (@raise reference ((f.ml (1 0) (1 13)) foo)))))
+            (((f.ml (1 0) (1 13)) (@raise (simple ((f.ml (1 0) (1 13)) foo) ())))))
            (warnings
             ( "File \"f.ml\", line 1, characters 13-13:\
              \n'{:...} (external link)' is not allowed in '@raise'."))) |}]
@@ -4029,7 +4024,7 @@ let%expect_test _ =
         {|
           ((output
             (((f.ml (1 0) (1 18))
-              (@raise reference ((f.ml (1 0) (1 14)) Foo)
+              (@raise (simple ((f.ml (1 0) (1 14)) Foo) ())
                ((f.ml (1 15) (1 18)) (paragraph (((f.ml (1 15) (1 18)) (word bar)))))))
              ((f.ml (1 18) (1 19)) (paragraph (((f.ml (1 18) (1 19)) (word })))))))
            (warnings
@@ -5083,9 +5078,7 @@ let%expect_test _ =
       test "@raise \xce\xbb";
       [%expect
         {|
-          ((output
-            (((f.ml (1 0) (1 9)) (@raise plain ((f.ml (1 0) (1 9)) "\206\187")))))
-           (warnings ())) |}]
+          ((output (((f.ml (1 0) (1 9)) (@raise (word "\206\187"))))) (warnings ())) |}]
 
     let see =
       test "@see <\xce\xbb>";

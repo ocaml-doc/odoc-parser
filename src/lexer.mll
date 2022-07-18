@@ -408,11 +408,11 @@ rule token input = parse
           ~start_offset:(Lexing.lexeme_end lexbuf)
           (Parse_error.not_allowed
             ~what:(Token.describe (reference_token start ""))
-            ~in_what:(Token.describe (`Tag (`Raise (`Plain, "")))));
-      emit input (`Tag (`Raise (`Reference, target))) }
+            ~in_what:(Token.describe (`Tag (`Raise (`Word "")))));
+      emit input (`Tag (`Raise (`Simple_reference target))) }
 
   | ("@raise" | "@raises") horizontal_space+ ((_ # space_char)+ as name)
-    { emit input (`Tag (`Raise (`Plain, name))) }
+    { emit input (`Tag (`Raise (`Word name))) }
 
   | ("@return" | "@returns")
     { emit input (`Tag `Return) }
@@ -468,7 +468,7 @@ rule token input = parse
 
   | ("@raise" | "@raises") as tag
     { warning input (Parse_error.truncated_raise tag);
-      emit input (`Tag (`Raise (`Plain, ""))) }
+      emit input (`Tag (`Raise (`Word ""))) }
 
   | "@before"
     { warning input Parse_error.truncated_before;
