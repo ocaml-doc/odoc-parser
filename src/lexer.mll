@@ -345,9 +345,9 @@ rule token input = parse
           input
           ~start_offset:(Lexing.lexeme_start lexbuf)
           (Parse_error.not_allowed
-            ~what:(Token.describe (`Word {|{|}))
+            ~what:(Token.describe (`Word "{"))
             ~in_what:(Token.describe token));
-      emit input token}
+      emit input token }
   | "{["
     { code_block (Lexing.lexeme_start lexbuf) None input lexbuf }
 
