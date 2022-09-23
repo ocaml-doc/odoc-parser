@@ -1632,7 +1632,6 @@ let%expect_test _ =
             (paragraph
              (((f.ml (1 0) (1 9)) (simple ((f.ml (1 2) (1 9)) "(.*{})") ())))))))
          (warnings ())) |}]
-
     let quotes_with_dash =
       test "{!\"my-name\"}";
       [%expect
@@ -1653,7 +1652,7 @@ let%expect_test _ =
                 (((f.ml (1 0) (1 6)) (simple ((f.ml (1 2) (1 6)) "\"}\"") ())))))))
             (warnings ())) |}]
 
-    let quotes_with_curly_braces =
+    let operator_unbalanced =
       test "{!(.*()}";
       [%expect
         {|
@@ -1663,9 +1662,17 @@ let%expect_test _ =
              (((f.ml (1 0) (1 8)) (simple ((f.ml (1 2) (1 8)) "(.*()}") ())))))))
          (warnings
           ( "File \"f.ml\", line 1, characters 8-8:\
-           \n'}' (end of reference) is not allowed in '(.*()' (custom operator)."
-            "File \"f.ml\", line 1, characters 8-8:\
-           \nEnd of text is not allowed in '{!...}' (cross-reference)."))) |}]
+           \n'}' (end of reference) is not allowed in '(.*()' (custom operator)."))) |}]
+    let operator_eof =
+        test "{!(.*()" ;
+        [%expect {|
+          ((output
+            (((f.ml (1 0) (1 7))
+              (paragraph
+               (((f.ml (1 0) (1 7)) (simple ((f.ml (1 2) (1 7)) "(.*()") ())))))))
+           (warnings
+            ( "File \"f.ml\", line 1, characters 7-7:\
+             \nEnd of text is not allowed in '{!...}' (cross-reference)."))) |}]
   end in
   ()
 
