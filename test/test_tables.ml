@@ -37,6 +37,33 @@ let%expect_test _ =
             (table (syntax heavy) (data ((row ((header ()))))) (align ())))))
          (warnings ())) |}]
 
+    let bad_data =
+      test "{table absurd content}";
+      [%expect
+        {|
+        ((output (((f.ml (1 0) (1 22)) (table (syntax heavy) (data ()) (align ())))))
+         (warnings
+          ( "File \"f.ml\", line 1, characters 7-13:\
+           \n'absurd' is not allowed in '{table ...}' (table).\
+           \nSuggestion: Move outside of {table ...}, or inside {tr ...}"
+            "File \"f.ml\", line 1, characters 14-21:\
+           \n'content' is not allowed in '{table ...}' (table).\
+           \nSuggestion: Move outside of {table ...}, or inside {tr ...}"))) |}]
+
+    let bad_row =
+      test "{table {tr absurd content}}";
+      [%expect
+        {|
+        ((output
+          (((f.ml (1 0) (1 27)) (table (syntax heavy) (data ((row ()))) (align ())))))
+         (warnings
+          ( "File \"f.ml\", line 1, characters 11-17:\
+           \n'absurd' is not allowed in '{tr ...}' (table row).\
+           \nSuggestion: Move outside of {table ...}, or inside {td ...} or {th ...}"
+            "File \"f.ml\", line 1, characters 18-25:\
+           \n'content' is not allowed in '{tr ...}' (table row).\
+           \nSuggestion: Move outside of {table ...}, or inside {td ...} or {th ...}"))) |}]
+
     let multiple_headers =
       test "{table {tr {th}} {tr {th}} {tr {td}}}";
       [%expect
@@ -470,6 +497,48 @@ let%expect_test _ =
                (align (center center center center))))))
            (warnings ())) |}]
 
+    let light_table_markup_with_newlines =
+      test
+        {|
+      {t | h1           | h2          |
+         |--------------|-------------|
+         | {e with
+              newlines} | {b d} [foo] |
+      }
+      |};
+      [%expect
+        {|
+        ((output
+          (((f.ml (2 6) (6 7))
+            (table (syntax light)
+             (data
+              ((row
+                ((header
+                  (((f.ml (2 11) (2 13))
+                    (paragraph (((f.ml (2 11) (2 13)) (word h1)))))))
+                 (header
+                  (((f.ml (2 26) (2 28))
+                    (paragraph (((f.ml (2 26) (2 28)) (word h2)))))))))
+               (row
+                ((data
+                  (((f.ml (4 11) (5 23))
+                    (paragraph
+                     (((f.ml (4 11) (5 23))
+                       (emphasis
+                        (((f.ml (4 14) (4 18)) (word with))
+                         ((f.ml (4 18) (5 14)) space)
+                         ((f.ml (5 14) (5 22)) (word newlines))))))))))
+                 (data
+                  (((f.ml (5 26) (5 31))
+                    (paragraph
+                     (((f.ml (5 26) (5 31)) (bold (((f.ml (5 29) (5 30)) (word d))))))))
+                   ((f.ml (5 32) (5 37))
+                    (paragraph (((f.ml (5 32) (5 37)) (code_span foo)))))))))))
+             (align (center center))))))
+         (warnings
+          ( "File \"f.ml\", line 4, character 18 to line 5, character 14:\
+           \nLine break is not allowed in '{t ...}' (table)."))) |}]
+
     let no_space =
       test
         {|
@@ -612,5 +681,65 @@ let%expect_test _ =
          (warnings
           ( "File \"f.ml\", line 3, characters 11-18:\
            \n'{[...]}' (code block) is not allowed in '{t ...}' (table)."))) |}]
+
+    let more_cells_later =
+      test
+        {|
+      {t
+       | x | y |
+       |---|---|
+       | x | y | z |
+      }
+      |};
+      [%expect
+        {|
+        ((output
+          (((f.ml (2 6) (6 7))
+            (table (syntax light)
+             (data
+              ((row
+                ((header
+                  (((f.ml (3 9) (3 10)) (paragraph (((f.ml (3 9) (3 10)) (word x)))))))
+                 (header
+                  (((f.ml (3 13) (3 14))
+                    (paragraph (((f.ml (3 13) (3 14)) (word y)))))))))
+               (row
+                ((data
+                  (((f.ml (5 9) (5 10)) (paragraph (((f.ml (5 9) (5 10)) (word x)))))))
+                 (data
+                  (((f.ml (5 13) (5 14))
+                    (paragraph (((f.ml (5 13) (5 14)) (word y)))))))
+                 (data
+                  (((f.ml (5 17) (5 18))
+                    (paragraph (((f.ml (5 17) (5 18)) (word z)))))))))))
+             (align (center center))))))
+         (warnings ())) |}]
+
+    let less_cells_later =
+      test
+        {|
+      {t
+       | x | y |
+       |---|---|
+       x 
+      }
+      |};
+      [%expect
+        {|
+        ((output
+          (((f.ml (2 6) (6 7))
+            (table (syntax light)
+             (data
+              ((row
+                ((header
+                  (((f.ml (3 9) (3 10)) (paragraph (((f.ml (3 9) (3 10)) (word x)))))))
+                 (header
+                  (((f.ml (3 13) (3 14))
+                    (paragraph (((f.ml (3 13) (3 14)) (word y)))))))))
+               (row
+                ((data
+                  (((f.ml (5 7) (5 8)) (paragraph (((f.ml (5 7) (5 8)) (word x)))))))))))
+             (align (center center))))))
+         (warnings ())) |}]
   end in
   ()
