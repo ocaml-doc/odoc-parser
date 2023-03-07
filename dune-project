@@ -1,6 +1,6 @@
 (lang dune 2.8)
 (name odoc-parser)
-(version 1.0.0) 
+(version 2.0.0)
 
 (generate_opam_files true)
 
@@ -21,5 +21,5 @@ understood by ocamldoc.")
   astring
   result
   camlp-streams
+  cmarkit
   (ppx_expect :with-test)))
-

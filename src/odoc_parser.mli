@@ -22,7 +22,7 @@ module Loc = Loc
 (** Warnings produced during parsing. *)
 module Warning : sig
   type t = Warning.t = { location : Loc.span; message : string }
-  (** Warnings are represented as record containing the human-readable text 
+  (** Warnings are represented as record containing the human-readable text
       of the warning alongside the location of the offending text in the source *)
 
   val pp : Format.formatter -> t -> unit
