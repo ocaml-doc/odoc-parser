@@ -99,8 +99,7 @@ let position_of_point : t -> Loc.point -> Lexing.position =
   let pos_fname = original_pos.pos_fname in
   { Lexing.pos_bol; pos_lnum; pos_cnum; pos_fname }
 
-(* The main entry point for this module *)
-let parse_comment ~location ~text =
+let ocamldoc_parse_comment ~location ~text =
   let warnings = ref [] in
   let reversed_newlines = reversed_newlines ~input:text in
   let token_stream =
@@ -115,6 +114,14 @@ let parse_comment ~location ~text =
   in
   let ast, warnings = Syntax.parse warnings token_stream in
   { ast; warnings; reversed_newlines; original_pos = location }
+
+(* The main entry point for this module *)
+let parse_comment ~location ~text = match Ocamlmark.sniff_syntax ~text () with
+| `Ocamldoc -> ocamldoc_parse_comment ~location ~text
+| `Ocamlmark ->
+    let ast, warnings = Ocamlmark.parse_comment ~location ~text () in
+    let reversed_newlines = reversed_newlines ~input:text in
+    { ast; warnings; reversed_newlines; original_pos = location }
 
 (* Accessor functions, as [t] is opaque *)
 let warnings t = t.warnings
