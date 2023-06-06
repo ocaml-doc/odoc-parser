@@ -3,16 +3,14 @@
    for 4.02 we can remove the following 3 functions *)
 let uppercase_ascii =
   let open Char in
-  function
-  | 'a' .. 'z' as c -> unsafe_chr(code c - 32)
-  | c -> c
+  function 'a' .. 'z' as c -> unsafe_chr (code c - 32) | c -> c
 
 let apply1 f s =
   let open String in
-  if length s = 0 then s else begin
+  if length s = 0 then s
+  else
     let r = sub s 1 (length s - 1) in
-    (make 1 (f(unsafe_get s 0))) ^ r
-  end
+    make 1 (f (unsafe_get s 0)) ^ r
 
 let capitalize_ascii s = apply1 uppercase_ascii s
 
