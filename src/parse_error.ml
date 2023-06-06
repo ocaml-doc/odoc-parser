@@ -1,4 +1,20 @@
-let capitalize_ascii = Astring.String.Ascii.capitalize
+(* This is taken from the ocaml stdlib (more or less) - only here because we support
+   4.02 and capitalize_ascii only arrived in 4.03. When we drop support
+   for 4.02 we can remove the following 3 functions *)
+let uppercase_ascii =
+  let open Char in
+  function
+  | 'a' .. 'z' as c -> unsafe_chr(code c - 32)
+  | c -> c
+
+let apply1 f s =
+  let open String in
+  if length s = 0 then s else begin
+    let r = sub s 1 (length s - 1) in
+    (make 1 (f(unsafe_get s 0))) ^ r
+  end
+
+let capitalize_ascii s = apply1 uppercase_ascii s
 
 let bad_markup : ?suggestion:string -> string -> Loc.span -> Warning.t =
  fun ?suggestion -> Warning.make ?suggestion "'%s': bad markup."

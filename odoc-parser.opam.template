@@ -4,7 +4,6 @@ doc: "https://ocaml-doc.github.io/odoc-parser/"
 depends: [
   "dune" {>= "2.8"}
   "ocaml" {>= "4.02.0"}
-  "astring"
   "result"
   "camlp-streams"
   "ppx_expect" {with-test}
