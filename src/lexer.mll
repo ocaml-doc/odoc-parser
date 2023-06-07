@@ -94,7 +94,7 @@ let trim_leading_whitespace : first_line_offset:int -> string -> string =
     count_leading_whitespace' 0 len
   in
 
-  let lines = Astring.String.cuts ~sep:"\n" s in
+  let lines = String.split_on_char '\n' s in
 
   let least_amount_of_whitespace =
     List.fold_left (fun least_so_far line ->
