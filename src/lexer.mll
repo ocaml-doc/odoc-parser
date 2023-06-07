@@ -1,21 +1,5 @@
 {
 
-(* The following function is taken from the ocaml stdlib. It's here because we support building
-   om OCaml < 4.04. Once we drop support for 4.03 and before we can remove the following function *)
-
-let split_on_char sep s =
-  let open String in
-  let r = ref [] in
-  let j = ref (length s) in
-  for i = length s - 1 downto 0 do
-    if unsafe_get s i = sep then begin
-      r := sub s (i + 1) (!j - i - 1) :: !r;
-      j := i
-    end
-  done;
-  sub s 0 !j :: !r
-
-
 let unescape_word : string -> string = fun s ->
   (* The common case is that there are no escape sequences. *)
   match String.index s '\\' with
@@ -110,7 +94,7 @@ let trim_leading_whitespace : first_line_offset:int -> string -> string =
     count_leading_whitespace' 0 len
   in
 
-  let lines = split_on_char '\n' s in
+  let lines = String.split_on_char '\n' s in
 
   let least_amount_of_whitespace =
     List.fold_left (fun least_so_far line ->

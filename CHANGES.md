@@ -1,5 +1,9 @@
 # 3.0.0
 
+### Changed
+
+- Remove astring dependency (@jonludlam, #18)
+
 ### Fixed
 
 - Better handling of reference syntax (@EmileTrotignon, #13)
