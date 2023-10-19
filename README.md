@@ -1,5 +1,8 @@
 # odoc-parser 
 
+> :bangbang: Disclaimer: Starting from version `2.3.0`, the odoc parser package
+> is now part of [odoc's repo](https://github.com/ocaml/odoc/).
+
 Odoc-parser is a parser for odoc markup, which is an extension of the original markup
 language parsed by [ocamldoc](https://ocaml.org/releases/4.12/htmlman/ocamldoc.html).
 
